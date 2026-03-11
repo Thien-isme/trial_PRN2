@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Q2_SE182117.Models.Book>
+@{
+    var authors = ViewBag.Authors as IEnumerable<Q2_SE182117.Models.Author>;
+}
+
+<h2>List of books</h2>
+
+<!-- Form lọc tác giả -->
+<form method="get" asp-action="Index" asp-controller="Book">
+    <label for="authorId">Filter by author:</label>
+    <select name="authorId" id="sl_authors">
+        <option id="op_0" value="">All authors</option>
+        @if (authors != null)
+        {
+            int i = 1;
+            foreach (var author in authors)
+            {
+                <option id="op_@i" value="@author.AuthorId">@author.Name</option>
+                i++;
+            }
+        }
+    </select>
+    <button id="bt_filter" type="submit">Filter</button>
+</form>
+
+<!-- Bảng danh sách sách -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>BookId</th>
+            <th>Title</th>
+            <th>Publication Year</th>
+            <th>Authors</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td id="td_bookId_@item.BookId">@item.BookId</td>
+                <td id="td_title_@item.BookId">@item.Title</td>
+                <td id="td_publicationYear_@item.BookId">@item.PublicationYear</td>
+                <td id="td_authors_@item.BookId">
+                    @foreach (var ba in item.Authors)
+                    {
+                        <div id="div_@(item.BookId)_@(ba.AuthorId)">@ba.Name</div>
+                    }
+                </td>
+                <td id="td_action_@item.BookId">
+                    <a id="a_@item.BookId" asp-action="Details" asp-route-id="@item.BookId">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
